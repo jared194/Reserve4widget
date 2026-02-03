@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Reserve Widget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .section-title {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        label {
+            font-weight: 500;
+            color: #555;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Prevent iOS zoom on input focus */
+        @supports (-webkit-touch-callout: none) {
+            input, select {
+                font-size: 16px;
+            }
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+            font-size: 1.3em;
+            font-weight: bold;
+            padding-top: 15px;
+        }
+
+        .result-label {
+            opacity: 0.9;
+        }
+
+        .result-value {
+            font-weight: 600;
+        }
+
+        .notes {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #856404;
+        }
+
+        .notes h4 {
+            margin-bottom: 10px;
+            color: #856404;
+        }
+
+        .notes ul {
+            margin-left: 20px;
+        }
+
+        .notes li {
+            margin-bottom: 5px;
+        }
+
+        .disclaimer {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 12px;
+            }
+            
+            .header {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .section {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .section-title {
+                font-size: 1.1em;
+            }
+            
+            .input-row {
+                grid-template-columns: 1fr;
+                gap: 8px;
+            }
+            
+            .input-row label {
+                font-size: 0.95em;
+            }
+            
+            input, select {
+                width: 100%;
+                font-size: 16px; /* Prevents zoom on iOS */
+                -webkit-appearance: none;
+                appearance: none;
+            }
+            
+            select {
+                background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+                background-repeat: no-repeat;
+                background-position: right 8px center;
+                padding-right: 32px;
+            }
+            
+            .result-box {
+                padding: 15px;
+            }
+            
+            .result-item {
+                font-size: 0.9em;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .result-item:last-child {
+                font-size: 1.1em;
+            }
+            
+            .notes, .disclaimer {
+                font-size: 0.85em;
+            }
+            
+            #dropDayValue {
+                display: block;
+                margin-top: 5px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>✈️ Reserve Widget</h1>
+            <p>Version 1.0 | Calculate your monthly reserve pay guarantee</p>
+        </div>
+
+        <div class="content">
+            <!-- Basic Information -->
+            <div class="section">
+                <div class="section-title">📅 Basic Information</div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <label>Bid Month:</label>
+                        <select id="bidMonth">
+                            <option value="0">January</option>
+                            <option value="1">February</option>
+                            <option value="2">March</option>
+                            <option value="3">April</option>
+                            <option value="4">May</option>
+                            <option value="5">June</option>
+                            <option value="6">July</option>
+                            <option value="7">August</option>
+                            <option value="8">September</option>
+                            <option value="9">October</option>
+                            <option value="10">November</option>
+                            <option value="11">December</option>
+                        </select>
+                    </div>
+                    <div class="input-row">
+                        <label>Year:</label>
+                        <input type="number" id="year" value="2026" min="2020" max="2030">
+                    </div>
+                    <div class="input-row">
+                        <label>ALV (hhmm):</label>
+                        <input type="text" id="alv" placeholder="e.g., 7500" maxlength="4">
+                    </div>
+                    <div class="input-row">
+                        <label>Extra X day for 20% reserve staffing:</label>
+                        <select id="extraXDay">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Adjustments -->
+            <div class="section">
+                <div class="section-title">📝 Adjustments</div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <label>Vacation days:</label>
+                        <input type="number" id="vacationDays" value="0" min="0">
+                    </div>
+                    <div class="input-row">
+                        <label>CQ days:</label>
+                        <input type="number" id="cqDays" value="0" min="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Qual training days:</label>
+                        <input type="number" id="qualDays" value="0" min="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Parental Leave days (Pre-Posted):</label>
+                        <input type="number" id="parentalDays" value="0" min="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Activity based on pro-rated ALV days:</label>
+                        <input type="number" id="activityDays" value="0" min="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Unpaid leave days:</label>
+                        <input type="number" id="unpaidDays" value="0" min="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Other days:</label>
+                        <input type="number" id="otherDays1" value="0" min="0">
+                        <input type="text" id="otherCredit1" placeholder="hhmm">
+                    </div>
+                    <div class="input-row">
+                        <label>Other days (2nd):</label>
+                        <input type="number" id="otherDays2" value="0" min="0">
+                        <input type="text" id="otherCredit2" placeholder="hhmm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post-PBS Calculations -->
+            <div class="section">
+                <div class="section-title">📊 Post-PBS Award Calculations</div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <label>Reserve days dropped:</label>
+                        <input type="number" id="droppedDays" value="0" min="0">
+                        <span id="dropDayValue" style="color: #666; font-size: 0.9em;">(-0:00 ea)</span>
+                    </div>
+                    <div class="input-row">
+                        <label>IVD/Parental Leave replacement days (4:35 ea):</label>
+                        <input type="number" id="replacementDays" value="0" min="0">
+                    </div>
+                    <div class="input-row">
+                        <label>Carry In Credit (hhmm):</label>
+                        <input type="text" id="carryInCredit" placeholder="e.g., 1230" maxlength="4">
+                    </div>
+                    <div class="input-row">
+                        <label>ALPP days (1:25 per day):</label>
+                        <input type="number" id="alppDays" value="0" min="0">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="result-box">
+                <div class="section-title" style="color: white; margin-bottom: 15px;">💰 Calculated Results</div>
+                <div class="result-item">
+                    <span class="result-label">Days in Month:</span>
+                    <span class="result-value" id="daysInMonth">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">On Call Days:</span>
+                    <span class="result-value" id="onCallDays">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Normal Reserve Guarantee:</span>
+                    <span class="result-value" id="normalGuarantee">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Pro Rata Portion (ALV ÷ Days):</span>
+                    <span class="result-value" id="proRataShare">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Pro Rata Reduction:</span>
+                    <span class="result-value" id="proRataReduction">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Adjusted Reserve Guarantee:</span>
+                    <span class="result-value" id="adjustedGuarantee">-</span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Total Credit:</span>
+                    <span class="result-value" id="totalCredit">-</span>
+                </div>
+            </div>
+
+            <!-- Notes -->
+            <div class="notes">
+                <h4>📌 Important Notes:</h4>
+                <ul>
+                    <li><strong>Time Format:</strong> Enter times as hhmm (e.g., 7500 for 75:00) or hmm (e.g., 730 for 7:30)</li>
+                    <li><strong>Rounding:</strong> Calculations use full unrounded values internally for accuracy</li>
+                    <li><strong>ALPP Days:</strong> Treated as on call days for pay calculation</li>
+                    <li><strong>Standards Meetings:</strong> Use "Other" entries at 5:00 for each meeting day and travel day</li>
+                    <li><strong>Parental Leave:</strong> These calculations only apply to pre-posted parental leave</li>
+                </ul>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+                <strong>⚠️ Disclaimer:</strong> Use this calculator at your own risk. This is not official documentation.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Helper function to convert hhmm or hmm string to decimal hours
+        function timeToHours(timeStr) {
+            if (!timeStr || timeStr === '0' || timeStr === '') return 0;
+            const str = timeStr.toString();
+            
+            // Handle different input lengths
+            let hours, minutes;
+            if (str.length <= 2) {
+                // Just hours (e.g., "75" = 75 hours)
+                hours = parseInt(str);
+                minutes = 0;
+            } else if (str.length === 3) {
+                // hmm format (e.g., "730" = 7 hours 30 minutes)
+                hours = parseInt(str.slice(0, 1));
+                minutes = parseInt(str.slice(1));
+            } else {
+                // hhmm format (e.g., "7500" = 75 hours 0 minutes)
+                hours = parseInt(str.slice(0, -2));
+                minutes = parseInt(str.slice(-2));
+            }
+            
+            return hours + (minutes / 60);
+        }
+
+        // Helper function to convert decimal hours to hh:mm format
+        function hoursToTime(hours) {
+            const h = Math.floor(hours);
+            const m = Math.round((hours - h) * 60);
+            return `${h}:${m.toString().padStart(2, '0')}`;
+        }
+
+        // Get days in month
+        function getDaysInMonth(month, year) {
+            return new Date(year, month + 1, 0).getDate();
+        }
+
+        // Calculate X days based on proration table (Table 12.M)
+        function getXDays(daysAvail, alvHours, extraXDay) {
+            // X-day proration table based on days of availability and ALV
+            // Rows represent days available (1-31), values are X days (days off)
+            const xDayTable = {
+                30: { // For 30 day availability
+                    72: 13,  // 72:00-74:59 ALV range
+                    75: 14   // 75:00-80:00 ALV range
+                },
+                31: { // For 31 day availability
+                    72: 13,  // 72:00-74:59 ALV range
+                    75: 13   // 75:00-80:00 ALV range
+                }
+            };
+            
+            // Build full table for all days (extrapolating from the image)
+            // Row index = days available - 1 (0-indexed)
+            const fullTable = [
+                { 72: 0, 75: 0 },   // 1 day
+                { 72: 0, 75: 0 },   // 2 days
+                { 72: 1, 75: 1 },   // 3 days
+                { 72: 1, 75: 1 },   // 4 days
+                { 72: 1, 75: 2 },   // 5 days
+                { 72: 2, 75: 2 },   // 6 days
+                { 72: 3, 75: 3 },   // 7 days
+                { 72: 3, 75: 3 },   // 8 days
+                { 72: 3, 75: 3 },   // 9 days
+                { 72: 4, 75: 4 },   // 10 days
+                { 72: 4, 75: 4 },   // 11 days
+                { 72: 5, 75: 5 },   // 12 days
+                { 72: 5, 75: 5 },   // 13 days
+                { 72: 6, 75: 5 },   // 14 days
+                { 72: 6, 75: 6 },   // 15 days
+                { 72: 7, 75: 6 },   // 16 days
+                { 72: 7, 75: 7 },   // 17 days
+                { 72: 7, 75: 7 },   // 18 days
+                { 72: 8, 75: 7 },   // 19 days
+                { 72: 8, 75: 8 },   // 20 days
+                { 72: 9, 75: 8 },   // 21 days
+                { 72: 9, 75: 8 },   // 22 days
+                { 72: 10, 75: 9 },  // 23 days
+                { 72: 10, 75: 9 },  // 24 days
+                { 72: 10, 75: 10 }, // 25 days
+                { 72: 11, 75: 10 }, // 26 days
+                { 72: 11, 75: 10 }, // 27 days
+                { 72: 12, 75: 11 }, // 28 days
+                { 72: 12, 75: 11 }, // 29 days
+                { 72: 13, 75: 12 }, // 30 days
+                { 72: 13, 75: 13 }  // 31 days
+            ];
+            
+            // Determine which column to use based on ALV
+            const alvColumn = alvHours < 75 ? 72 : 75;
+            
+            // Get base X days from table
+            let baseXDays = 0;
+            if (daysAvail >= 1 && daysAvail <= 31) {
+                baseXDays = fullTable[daysAvail - 1][alvColumn];
+            }
+            
+            return extraXDay ? baseXDays + 1 : baseXDays;
+        }
+
+        // Calculate on call days
+        function calculateOnCallDays(daysInMonth, xDays) {
+            return daysInMonth - xDays;
+        }
+
+        // Calculate normal reserve guarantee based on ALV
+        function calculateNormalGuarantee(alv, onCallDays) {
+            const alvHours = timeToHours(alv);
+            // The normal guarantee is based on the ALV value entered
+            // Pro rata portion of ALV times on-call days
+            const proRataALV = (alvHours / onCallDays) * onCallDays;
+            return alvHours; // The guarantee is essentially the ALV value
+        }
+
+        // Bid month date ranges (from official table)
+        function getBidMonthDays(month, year) {
+            // Bid month definitions
+            const bidMonths = [
+                { start: [0, 1], end: [0, 30] },   // Jan: Jan 1 - Jan 30
+                { start: [0, 31], end: [2, 1] },   // Feb: Jan 31 - Mar 1
+                { start: [2, 2], end: [2, 31] },   // Mar: Mar 2 - Mar 31
+                { start: [3, 1], end: [4, 1] },    // Apr: Apr 1 - May 1
+                { start: [4, 2], end: [4, 31] },   // May: May 2 - May 31
+                { start: [5, 1], end: [6, 1] },    // Jun: Jun 1 - Jul 1
+                { start: [6, 2], end: [6, 31] },   // Jul: Jul 2 - Jul 31
+                { start: [7, 1], end: [7, 30] },   // Aug: Aug 1 - Aug 30
+                { start: [7, 31], end: [8, 30] },  // Sep: Aug 31 - Sep 30
+                { start: [9, 1], end: [9, 31] },   // Oct: Oct 1 - Oct 31
+                { start: [10, 1], end: [10, 30] }, // Nov: Nov 1 - Nov 30
+                { start: [11, 1], end: [11, 31] }  // Dec: Dec 1 - Dec 31
+            ];
+            
+            const bidMonth = bidMonths[month];
+            const startDate = new Date(year, bidMonth.start[0], bidMonth.start[1]);
+            const endDate = new Date(year, bidMonth.end[0], bidMonth.end[1]);
+            
+            // Calculate days between start and end (inclusive)
+            const diffTime = endDate - startDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+            
+            return diffDays;
+        }
+        
+        // Main calculation function
+        function calculate() {
+            const month = parseInt(document.getElementById('bidMonth').value);
+            const year = parseInt(document.getElementById('year').value);
+            const alv = document.getElementById('alv').value;
+            const extraXDay = document.getElementById('extraXDay').value === 'true';
+            
+            // Get the correct number of days in the bid month
+            const daysInBidMonth = getBidMonthDays(month, year);
+            
+            const alvHours = timeToHours(alv);
+            const xDays = getXDays(daysInBidMonth, alvHours, extraXDay);
+            const onCallDays = daysInBidMonth - xDays;
+            
+            const normalGuarantee = calculateNormalGuarantee(alv, onCallDays);
+            const proRataShare = normalGuarantee / onCallDays;
+            
+            // Get adjustment values
+            const vacationDays = parseInt(document.getElementById('vacationDays').value) || 0;
+            const cqDays = parseInt(document.getElementById('cqDays').value) || 0;
+            const qualDays = parseInt(document.getElementById('qualDays').value) || 0;
+            const parentalDays = parseInt(document.getElementById('parentalDays').value) || 0;
+            const activityDays = parseInt(document.getElementById('activityDays').value) || 0;
+            const unpaidDays = parseInt(document.getElementById('unpaidDays').value) || 0;
+            const otherDays1 = parseInt(document.getElementById('otherDays1').value) || 0;
+            const otherCredit1 = timeToHours(document.getElementById('otherCredit1').value);
+            const otherDays2 = parseInt(document.getElementById('otherDays2').value) || 0;
+            const otherCredit2 = timeToHours(document.getElementById('otherCredit2').value);
+            
+            // Calculate the pro-rata portion of ALV (this gets subtracted for each non-reserve day)
+            const proRataPortionALV = alvHours / daysInBidMonth; // ALV divided by days available
+            
+            // Total days that are not regular reserve days
+            const totalNonReserveDays = vacationDays + cqDays + qualDays + parentalDays + activityDays + unpaidDays + otherDays1 + otherDays2;
+            
+            // Pro-rata reduction (subtract ALV pro-rata for each non-reserve day)
+            const proRataReduction = proRataPortionALV * totalNonReserveDays;
+            
+            // Calculate credits (add back the specific value for each type)
+            const vacationCredit = vacationDays * (4 + 35/60); // 4:35 per vacation day
+            const cqCredit = cqDays * 5.0; // 5:00 per CQ day
+            const qualCredit = qualDays * (3 + 5/60); // 3:05 per qual day
+            const parentalCredit = parentalDays * (4 + 35/60); // 4:35 parental leave
+            const activityCredit = activityDays * proRataPortionALV;
+            const unpaidCredit = 0; // Unpaid days just get the reduction, no credit
+            const other1Credit = otherDays1 * otherCredit1;
+            const other2Credit = otherDays2 * otherCredit2;
+            
+            // Post-PBS calculations
+            const droppedDays = parseInt(document.getElementById('droppedDays').value) || 0;
+            const replacementDays = parseInt(document.getElementById('replacementDays').value) || 0;
+            const carryInCredit = timeToHours(document.getElementById('carryInCredit').value);
+            const alppDays = parseInt(document.getElementById('alppDays').value) || 0;
+            
+            // Reserve pro-rata share = Reserve Guarantee / On-Call Days (without correcting for absences)
+            const reserveProRataShare = normalGuarantee / onCallDays;
+            
+            const dropCredit = -(droppedDays * reserveProRataShare); // Reserve pro-rata share per dropped day
+            const replacementCredit = replacementDays * (4 + 35/60); // 4:35 at vacation rate
+            const alppCredit = alppDays * (1 + 25/60); // 1:25 per ALPP day
+            
+            // Calculate adjusted guarantee
+            let adjustedGuarantee = normalGuarantee;
+            adjustedGuarantee += vacationCredit + cqCredit + qualCredit + parentalCredit + activityCredit;
+            adjustedGuarantee += other1Credit + other2Credit;
+            adjustedGuarantee -= proRataReduction;
+            adjustedGuarantee += alppCredit;
+            adjustedGuarantee += dropCredit + replacementCredit;
+            
+            // Calculate total credit
+            const creditOverGuarantee = Math.max(0, carryInCredit - adjustedGuarantee);
+            const totalCredit = adjustedGuarantee + creditOverGuarantee;
+            
+            // Update display
+            document.getElementById('daysInMonth').textContent = daysInBidMonth;
+            document.getElementById('onCallDays').textContent = onCallDays;
+            document.getElementById('normalGuarantee').textContent = hoursToTime(normalGuarantee);
+            document.getElementById('proRataShare').textContent = hoursToTime(proRataPortionALV);
+            document.getElementById('proRataReduction').textContent = hoursToTime(proRataReduction);
+            document.getElementById('adjustedGuarantee').textContent = hoursToTime(adjustedGuarantee);
+            document.getElementById('totalCredit').textContent = hoursToTime(totalCredit);
+            document.getElementById('dropDayValue').textContent = `(-${hoursToTime(reserveProRataShare)} ea)`;
+        }
+
+        // Add event listeners to all inputs
+        document.querySelectorAll('input, select').forEach(element => {
+            element.addEventListener('input', calculate);
+            element.addEventListener('change', calculate);
+        });
+
+        // Set year to current year
+        document.getElementById('year').value = new Date().getFullYear();
+
+        // Initial calculation
+        calculate();
+    </script>
+</body>
+</html>
